@@ -1284,7 +1284,7 @@ h1 span {
   .setup { border-radius: 24px; padding: 19px; }
   .setup h2 { font-size: 26px; }
   .seg-btn { font-size: 12px; }
-  .game-screen { padding-left: 10px; padding-right: 10px; }
+  .game-screen { padding-left: 16px; padding-right: 16px; }
   .game-main { width: 100%; }
   .turn-name { font-size: 15px; }
   .game-card { min-height: clamp(330px, 50vh, 420px); border-radius: 24px; }
