@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#060b0d" />
+  <meta name="description" content="Poppy Playtime: A Tight Squeeze — a fan-made first-person toy factory horror game." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23080c0c'/%3E%3Ctext x='32' y='46' font-family='Impact,sans-serif' font-size='44' text-anchor='middle' fill='%23d72b32'%3EP%3C/text%3E%3C/svg%3E" />
+  <title>Poppy Playtime: A Tight Squeeze</title>
+  <script type="module" crossorigin src="./assets/index-DnOl8ppM.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BhnpDPEq.css">
+</head>
+<body>
+  <div id="app">
+    <canvas id="game"></canvas>
+
+    <div class="fx-layer" aria-hidden="true">
+      <div class="grain"></div>
+      <div class="vignette"></div>
+      <div class="alarm-flash"></div>
+      <div class="damage-flash"></div>
+    </div>
+
+    <div id="hud" class="hud hidden">
+      <div class="hud-brand">
+        <span class="brand-mark">P</span>
+        <div>
+          <div class="brand-title">PLAYTIME CO.</div>
+          <div class="brand-sub">EMPLOYEE ACCESS // 1995</div>
+        </div>
+      </div>
+
+      <div class="objective-panel">
+        <div class="objective-label">CURRENT OBJECTIVE</div>
+        <div id="objective" class="objective-text">RESTORE THE FACTORY POWER</div>
+        <div id="objective-detail" class="objective-detail">Locate three power fuses.</div>
+      </div>
+
+      <div class="status-panel">
+        <div class="fuse-row" aria-label="Power fuses">
+          <span class="status-caption">FUSES</span>
+          <span class="fuse-dot" data-fuse="0"></span>
+          <span class="fuse-dot" data-fuse="1"></span>
+          <span class="fuse-dot" data-fuse="2"></span>
+        </div>
+        <div class="tape-row"><span class="tape-icon">▣</span><span id="tape-count">0 / 3 TAPES</span></div>
+      </div>
+
+      <div class="crosshair" id="crosshair"><i></i></div>
+      <div class="interact" id="interact">
+        <span class="key">E</span>
+        <span id="interact-label">PICK UP FUSE</span>
+      </div>
+
+      <div class="stamina-wrap" id="stamina-wrap">
+        <div class="stamina-label">BREATH</div>
+        <div class="stamina-track"><div id="stamina" class="stamina-fill"></div></div>
+      </div>
+
+      <div class="hint" id="hint">
+        <span><b>WASD</b> MOVE</span>
+        <span><b>SHIFT</b> SPRINT</span>
+        <span><b>E</b> INTERACT</span>
+        <span><b>F</b> FLASHLIGHT</span>
+      </div>
+
+      <div id="subtitle" class="subtitle"></div>
+      <div id="toast" class="toast"></div>
+      <div id="intro-title" class="intro-title hidden">
+        <span>PLAYTIME CO. — OCTOBER 1995</span>
+        <strong>10 YEARS LATER</strong>
+        <small>You were invited back.</small>
+      </div>
+      <div id="chase-popup" class="chase-popup hidden">
+        <div class="chase-title">RUN.</div>
+        <div class="chase-sub">IT HEARD YOU.</div>
+      </div>
+    </div>
+
+    <div id="menu" class="screen menu-screen">
+      <div class="menu-noise"></div>
+      <div class="menu-content">
+        <div class="eyebrow"><span></span> PLAYTIME CO. ARCHIVE <span></span></div>
+        <h1 class="game-title">
+          <span class="title-small">POPPY</span>
+          <span class="title-main">PLAYTIME</span>
+          <span class="title-tag">A TIGHT SQUEEZE</span>
+        </h1>
+        <p class="menu-blurb">Ten years ago, every employee vanished.<br />Today, someone left the lights on for you.</p>
+        <div class="menu-actions">
+          <button id="play-button" class="primary-button" aria-label="Play">PLAY</button>
+          <button id="how-button" class="ghost-button">HOW TO PLAY</button>
+        </div>
+        <div class="menu-footer">
+          <span>FAN-MADE HORROR EXPERIENCE</span>
+          <span>HEADPHONES RECOMMENDED</span>
+          <span>v1.0</span>
+        </div>
+      </div>
+      <div class="menu-sticker sticker-left">DON'T<br />FEED<br />THE<br />TOYS</div>
+      <div class="menu-sticker sticker-right">SMILE!<br />SHE'S<br />WATCHING</div>
+    </div>
+
+    <div id="how-screen" class="screen modal-screen hidden">
+      <div class="modal-card">
+        <div class="modal-kicker">EMPLOYEE ORIENTATION</div>
+        <h2>HOW TO SURVIVE</h2>
+        <div class="control-grid">
+          <div><kbd>W A S D</kbd><span>Move through the factory</span></div>
+          <div><kbd>MOUSE</kbd><span>Look around</span></div>
+          <div><kbd>SHIFT</kbd><span>Sprint — watch your breath</span></div>
+          <div><kbd>E / CLICK</kbd><span>Interact &amp; use GrabPack</span></div>
+          <div><kbd>F</kbd><span>Toggle flashlight</span></div>
+          <div><kbd>ESC</kbd><span>Pause</span></div>
+        </div>
+        <p class="modal-note">Find three fuses. Restore the power. Retrieve Poppy. <em>Do not let Huggy find you.</em></p>
+        <button id="how-close" class="primary-button compact">UNDERSTOOD</button>
+      </div>
+    </div>
+
+    <div id="pause-screen" class="screen modal-screen hidden">
+      <div class="modal-card pause-card">
+        <div class="modal-kicker">SECURITY PAUSED</div>
+        <h2>TAKE A BREATH</h2>
+        <p class="modal-note">The factory will wait. Probably.</p>
+        <div class="pause-actions">
+          <button id="resume-button" class="primary-button compact">RESUME</button>
+          <button id="quit-button" class="ghost-button compact">QUIT TO MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="story-screen" class="screen story-screen hidden">
+      <div class="story-lines">
+        <div class="story-kicker">PLAYTIME CO. — OCTOBER 1995</div>
+        <div id="story-text" class="story-text"></div>
+      </div>
+      <button id="story-skip" class="story-skip">CLICK TO CONTINUE</button>
+    </div>
+
+    <div id="death-screen" class="screen death-screen hidden">
+      <div class="death-inner">
+        <div class="death-kicker">PLAYTIME CO. SAFETY NOTICE</div>
+        <h2>YOU WERE HUGGED</h2>
+        <p>Huggy Wuggy only wanted a hug.</p>
+        <button id="retry-button" class="primary-button">TRY AGAIN</button>
+        <button id="death-quit" class="ghost-button">QUIT TO MENU</button>
+      </div>
+    </div>
+
+    <div id="win-screen" class="screen win-screen hidden">
+      <div class="win-inner">
+        <div class="win-kicker">ARCHIVE COMPLETE</div>
+        <h2>YOU ESCAPED</h2>
+        <p class="win-copy">The doors lock behind you. In your arms, Poppy is smiling.<br />Somewhere inside the factory, something is still breathing.</p>
+        <div class="win-stats">
+          <div><span id="stat-time">00:00</span><small>TIME</small></div>
+          <div><span id="stat-tapes">0 / 3</span><small>TAPES FOUND</small></div>
+          <div><span>1</span><small>MONSTER SURVIVED</small></div>
+        </div>
+        <button id="again-button" class="primary-button">PLAY AGAIN</button>
+      </div>
+    </div>
+
+    <div id="loading" class="loading-screen">
+      <div class="loading-logo">PLAYTIME CO.</div>
+      <div class="loading-bar"><i></i></div>
+      <div class="loading-text">INITIALIZING SECURITY SYSTEM</div>
+    </div>
+
+    <div id="mobile-controls" class="mobile-controls hidden">
+      <div id="joystick" class="joystick"><div id="joystick-knob" class="joystick-knob"></div></div>
+      <div class="mobile-actions">
+        <button id="mobile-use" class="mobile-btn use">USE</button>
+        <button id="mobile-sprint" class="mobile-btn sprint">RUN</button>
+        <button id="mobile-light" class="mobile-btn light">LIGHT</button>
+      </div>
+      <div id="look-pad" class="look-pad"></div>
+    </div>
+
+    <div class="rotate-device" id="rotate-device">
+      <div>↻</div>
+      <p>Rotate your device for the full experience.</p>
+    </div>
+  </div>
+</body>
+</html>
