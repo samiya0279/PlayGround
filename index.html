@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#09060f">
+  <meta name="description" content="Dare Deck — 130 unique dares, no repeats. Play solo or pass the phone around the group.">
+  <title>Dare Deck — Draw. Do. Survive.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23f6ff5c'/%3E%3Ctext x='50' y='70' font-size='62' text-anchor='middle' font-family='Arial Black, sans-serif' fill='%2309060f'%3E!%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+  <section id="screen-home" class="screen is-active" aria-labelledby="home-title">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Dare Deck home">
+        <span class="brand-mark">!</span>
+        <span class="brand-type">DARE<span>DECK</span></span>
+      </a>
+      <div class="header-actions">
+        <span class="header-chip" id="library-count">132 cards</span>
+        <button id="sound-toggle" class="icon-button" type="button" aria-label="Mute sound" title="Sound on">
+          <span class="sound-on" aria-hidden="true">🔊</span><span class="sound-off" aria-hidden="true">🔇</span>
+        </button>
+        <button id="rules-button" class="text-button" type="button">House rules</button>
+      </div>
+    </header>
+
+    <main class="home-main">
+      <section class="hero" aria-labelledby="home-title">
+        <p class="eyebrow"><span class="live-dot"></span> 132 unique dares · 10 categories</p>
+        <h1 id="home-title">DRAW.<br><span>DO.</span><br>SURVIVE.</h1>
+        <p class="hero-copy">A party game of tiny dares and big reactions. Every card is drawn once. Every player gets a turn. Nobody has to be brave alone.</p>
+
+        <div class="hero-badges" aria-label="Game features">
+          <span class="badge">🎴 No repeats</span>
+          <span class="badge">🧊 Ice · 🧷 Clip · 💪 Endure</span>
+          <span class="badge">📱 Pass &amp; play</span>
+        </div>
+
+        <div class="deck-fan" aria-hidden="true">
+          <div class="fan-card fan-0"><span>🧷</span><small>CLIP</small></div>
+          <div class="fan-card fan-1"><span>💪</span><small>ENDURE</small></div>
+          <div class="fan-card fan-2"><span>🧊</span><small>ICE</small></div>
+          <div class="fan-card fan-front">
+            <div class="fan-front-top"><span>DARE</span><span>#001</span></div>
+            <strong>Hold an ice cube in each hand.</strong>
+            <div class="fan-front-foot"><span>15 sec</span><span>LV 1</span></div>
+          </div>
+        </div>
+        <p class="safety-note"><span aria-hidden="true">🛑</span> Stop anytime. Consent first. No injuries, no dares that need a hospital.</p>
+      </section>
+
+      <section class="setup" aria-labelledby="setup-title">
+        <div class="setup-top">
+          <div>
+            <p class="setup-kicker">YOUR RUN</p>
+            <h2 id="setup-title">Shuffle up</h2>
+          </div>
+          <div class="deck-pill"><strong id="deck-preview">132</strong><span>dares in deck</span></div>
+        </div>
+
+        <div class="mode-switch segmented" role="tablist" aria-label="Game mode">
+          <button type="button" class="seg-btn is-active" data-mode="solo" role="tab" aria-selected="true">
+            <span aria-hidden="true">🕺</span> Solo
+          </button>
+          <button type="button" class="seg-btn" data-mode="group" role="tab" aria-selected="false">
+            <span aria-hidden="true">👥</span> Group
+          </button>
+        </div>
+
+        <div id="solo-options" class="option-block">
+          <div class="label-row"><span class="label">Run length</span><span class="label-hint">one dare per turn</span></div>
+          <div class="pill-row" id="length-pills" role="group" aria-label="Number of dares">
+            <button type="button" class="pill" data-length="5">5</button>
+            <button type="button" class="pill is-active" data-length="10">10</button>
+            <button type="button" class="pill" data-length="15">15</button>
+            <button type="button" class="pill" data-length="20">20</button>
+          </div>
+        </div>
+
+        <div id="group-options" class="option-block" hidden>
+          <div class="label-row">
+            <span class="label">Players</span>
+            <span class="label-hint"><span id="player-count">2</span>/8</span>
+          </div>
+          <div id="player-list" class="player-list"></div>
+          <div class="add-player-row">
+            <input id="player-input" type="text" maxlength="14" placeholder="Add a name" autocomplete="off" aria-label="New player name">
+            <button id="add-player" class="small-button" type="button">Add</button>
+          </div>
+          <div class="label-row turns-label"><span class="label">Turns each</span><span class="label-hint"><span id="total-turns">6</span> total turns</span></div>
+          <div class="pill-row" id="turns-pills" role="group" aria-label="Turns per player">
+            <button type="button" class="pill" data-turns="1">1</button>
+            <button type="button" class="pill" data-turns="2">2</button>
+            <button type="button" class="pill is-active" data-turns="3">3</button>
+            <button type="button" class="pill" data-turns="5">5</button>
+          </div>
+        </div>
+
+        <div class="option-block">
+          <div class="label-row"><span class="label">Intensity</span><span class="label-hint" id="intensity-hint">Max level 2</span></div>
+          <div class="intensity-switch segmented" role="group" aria-label="Maximum intensity">
+            <button type="button" class="seg-btn" data-level="1">Chill</button>
+            <button type="button" class="seg-btn is-active" data-level="2">Bold</button>
+            <button type="button" class="seg-btn" data-level="3">Savage</button>
+          </div>
+        </div>
+
+        <div class="option-block">
+          <div class="label-row">
+            <span class="label">Categories</span>
+            <button id="select-all" class="mini-link" type="button">Select all</button>
+          </div>
+          <div id="category-chips" class="chips" role="group" aria-label="Dare categories"></div>
+        </div>
+
+        <div class="props-note" id="props-note">
+          <span aria-hidden="true">🎒</span>
+          <span id="props-text">Grab ice cubes, clothespins, and a timer. Check allergies before any taste dare.</span>
+        </div>
+
+        <button id="start-game" class="primary-button big-button" type="button">Start</button>
+        <p class="setup-foot">No repeats. No pressure. Safe word is <strong>skip</strong>.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Made for brave-ish humans.</span>
+      <span class="footer-dot">•</span>
+      <span>Play with people you trust.</span>
+    </footer>
+  </section>
+
+  <!-- ══════════════════════════════ GAME ══════════════════════════════ -->
+  <section id="screen-game" class="screen game-screen" aria-labelledby="turn-label">
+    <header class="game-header">
+      <button id="quit-game" class="icon-button" type="button" aria-label="Quit run">✕</button>
+      <div class="progress-wrap">
+        <div class="progress-labels">
+          <span id="progress-label">Dare 1 of 10</span>
+          <span id="deck-left">132 left</span>
+        </div>
+        <div class="progress-track" aria-hidden="true"><div id="progress-fill" class="progress-fill"></div></div>
+      </div>
+      <div class="score-pill" aria-label="Current score">
+        <span aria-hidden="true">★</span><strong id="score-value">0</strong>
+      </div>
+    </header>
+
+    <div id="players-strip" class="players-strip" hidden></div>
+
+    <main class="game-main">
+      <div class="turn-line">
+        <div class="turn-who">
+          <span id="turn-avatar" class="turn-avatar" aria-hidden="true">🕺</span>
+          <div>
+            <p class="turn-kicker" id="turn-kicker">YOUR TURN</p>
+            <p class="turn-name" id="turn-label">Dare 1</p>
+          </div>
+        </div>
+        <span id="timer-status" class="timer-status">Ready</span>
+      </div>
+
+      <div class="card-stage">
+        <div class="card-shadow card-shadow-a" aria-hidden="true"></div>
+        <div class="card-shadow card-shadow-b" aria-hidden="true"></div>
+        <article id="game-card" class="game-card">
+          <div class="card-head">
+            <span id="card-category" class="category-badge">🧊 Ice</span>
+            <span id="card-level" class="level-badge">LEVEL 1</span>
+          </div>
+          <div id="card-icon" class="card-icon" aria-hidden="true">🧊</div>
+          <p id="card-text" class="card-text">Hold an ice cube in each hand for 15 seconds.</p>
+          <div class="card-foot">
+            <div class="timer-cluster">
+              <div class="timer-ring-wrap" id="timer-ring-wrap">
+                <svg class="timer-ring" viewBox="0 0 64 64" aria-hidden="true">
+                  <circle class="timer-track" cx="32" cy="32" r="27"></circle>
+                  <circle id="timer-ring" class="timer-progress" cx="32" cy="32" r="27"></circle>
+                </svg>
+                <span id="timer-text" class="timer-text">0:15</span>
+              </div>
+            </div>
+            <div class="card-meta">
+              <span id="card-hint" class="card-hint">Take a breath. Start when ready.</span>
+              <span id="card-index" class="card-index">CARD 001</span>
+            </div>
+          </div>
+          <div id="result-stamp" class="result-stamp" hidden aria-hidden="true">NAILED IT</div>
+        </article>
+      </div>
+
+      <div id="controls" class="controls"></div>
+      <p id="game-announcer" class="sr-only" aria-live="polite"></p>
+      <p class="keyboard-hint" id="keyboard-hint">Space = timer · 1 = done · 2 = chicken out · S = skip</p>
+    </main>
+  </section>
+
+  <!-- ══════════════════════════════ END ══════════════════════════════ -->
+  <section id="screen-end" class="screen end-screen" aria-labelledby="end-title">
+    <main class="end-wrap">
+      <div class="end-card">
+        <div id="end-icon" class="end-icon" aria-hidden="true">🏆</div>
+        <p class="end-kicker" id="end-kicker">RUN COMPLETE</p>
+        <h2 id="end-title">Certified Menace</h2>
+        <p id="end-subtitle" class="end-subtitle">You did the thing. Mostly.</p>
+
+        <div class="end-stats" id="end-stats"></div>
+
+        <div id="podium" class="podium" hidden></div>
+
+        <div class="end-favorite" id="end-favorite" hidden></div>
+
+        <div class="end-actions">
+          <button id="play-again" class="primary-button" type="button">Play again</button>
+          <button id="change-setup" class="secondary-button" type="button">Change setup</button>
+        </div>
+        <p id="lifetime" class="lifetime"></p>
+      </div>
+    </main>
+  </section>
+
+  <!-- ══════════════════════════════ DIALOGS ══════════════════════════════ -->
+  <dialog id="rules-dialog" class="modal">
+    <form method="dialog">
+      <div class="modal-head">
+        <div>
+          <p class="modal-kicker">READ THIS BIT</p>
+          <h2>House rules</h2>
+        </div>
+        <button class="icon-button modal-close" value="close" aria-label="Close house rules">✕</button>
+      </div>
+      <div class="rules-grid">
+        <div class="rule">
+          <span class="rule-num">01</span>
+          <div><strong>Consent is the whole game.</strong><p>Everyone must be up for it. “No” and “skip” are complete sentences, with zero follow-up questions.</p></div>
+        </div>
+        <div class="rule">
+          <span class="rule-num">02</span>
+          <div><strong>Pain is a stop sign.</strong><p>No broken skin, no breath-holding, no fire, no weapons, no alcohol, no illegal stuff, no dares that need a hospital.</p></div>
+        </div>
+        <div class="rule">
+          <span class="rule-num">03</span>
+          <div><strong>Check allergies and ingredients.</strong><p>Taste dares are optional. Skip anything you are allergic to, unsure about, or simply do not want to eat.</p></div>
+        </div>
+        <div class="rule">
+          <span class="rule-num">04</span>
+          <div><strong>Pass the phone, not the pressure.</strong><p>Group mode is turn-based. The active player reads, attempts, and reports honestly. The group does not vote someone into a dare.</p></div>
+        </div>
+        <div class="rule">
+          <span class="rule-num">05</span>
+          <div><strong>No repeats, by design.</strong><p>Each card is removed from the deck when drawn. A run cannot serve the same dare twice. If the deck runs dry, the run ends.</p></div>
+        </div>
+        <div class="rule rule-warn">
+          <span class="rule-num">!</span>
+          <div><strong>Props are optional.</strong><p>No ice? No clothespins? Skip the card. You are not failing the game; the game is failing to supply props.</p></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <p>Best for teens and adults. Play with people you trust.</p>
+        <button class="primary-button" value="close">Got it</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="quit-dialog" class="modal modal-small">
+    <form method="dialog">
+      <p class="modal-kicker">LEAVING SO SOON?</p>
+      <h2>Quit this run?</h2>
+      <p class="modal-copy">Your current deck and scores will be gone. The dares will be reshuffled next time.</p>
+      <div class="modal-actions">
+        <button class="secondary-button" value="stay">Keep playing</button>
+        <button id="confirm-quit" class="danger-button" value="quit">Quit run</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
